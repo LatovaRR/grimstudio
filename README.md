@@ -41,8 +41,7 @@
 Bugs, complaints and suggestions — write directly:
 Ошибки, жалобы и предложения — пишите напрямую:
 
-- **Email (Gmail):** [написать письмо через Gmail](https://mail.google.com/mail/?view=cm&fs=1&to=grimstudiofeedback@gmail.com) — откроется готовое окно письма
-- **Любой другой почтовый клиент:** [grimstudiofeedback@gmail.com](mailto:grimstudiofeedback@gmail.com)
+- **Email:** [grimstudiofeedback@gmail.com](mailto:grimstudiofeedback@gmail.com)
 - **Boosty DM:** [boosty.to/latovarr](https://boosty.to/latovarr) (личные сообщения · DM)
 
 ---
