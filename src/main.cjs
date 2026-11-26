@@ -38,6 +38,93 @@ function createWindow() {
     console.error('Could not load GrimStudio UI:', error);
   });
   if (process.argv.includes('--grim-selftest')) runSelfTest(win);
+  if (process.argv.includes('--grim-capture')) runCapture(win);
+}
+// Screenshot automation for the README: a clean workspace, a painted makeup
+// demo, and the settings dialog. Only runs with --grim-capture <nothing>.
+function runCapture(win) {
+  const timeout = setTimeout(() => { console.error('[capture] TIMEOUT'); app.exit(2); }, 150000);
+  const outDir = path.join(__dirname, '..', 'docs');
+  const capture = async (name) => {
+    const image = await win.webContents.capturePage();
+    fs.writeFileSync(path.join(outDir, name), image.toPNG());
+    console.log('[capture] saved', name);
+  };
+  win.webContents.once('did-finish-load', () => {
+    setTimeout(() => {
+      win.webContents.executeJavaScript(`(async () => {
+        const wait=(ms)=>new Promise(r=>setTimeout(r,ms));
+        for(let i=0;i<120;i++){if(document.querySelector('#loading')?.classList.contains('hide'))break;await wait(500);}
+        // Normalize the demo state: studio light, gizmo off, default shape,
+        // symmetry off — regardless of persisted settings.
+        const gizmo=document.querySelector('#toggleLightGizmo');
+        if(gizmo?.getAttribute('aria-pressed')==='true')gizmo.click();
+        const preset=document.querySelector('#lightingPreset');
+        if(preset){preset.value='studio';preset.dispatchEvent(new Event('change',{bubbles:true}));}
+        document.querySelector('#brushShapeGrid button[data-shape-key="default"]')?.click();
+        const symmetry=document.querySelector('#symmetryToggle');
+        if(symmetry?.checked){symmetry.checked=false;symmetry.dispatchEvent(new Event('change',{bubbles:true}));}
+        await wait(2700); // let the symmetry toast fade before the clean capture
+        return true;
+      })()`, true).then(() => capture('screenshot-clean.png')).then(() => {
+        return win.webContents.executeJavaScript(`(async () => {
+          const wait=(ms)=>new Promise(r=>setTimeout(r,ms));
+          const stage=document.querySelector('#stage');
+          const rect=stage.getBoundingClientRect();
+          const cx=rect.left+rect.width/2, cy=rect.top+rect.height/2;
+          const toolButton=(index)=>document.querySelector('#toolGrid button[data-tool-index="'+index+'"]');
+          const picker=document.querySelector('#colorPicker');
+          const setColor=(hex)=>{picker.value=hex;picker.dispatchEvent(new Event('input',{bubbles:true}));};
+          const setSize=(value)=>{const slider=document.querySelector('#size');slider.value=String(value);slider.dispatchEvent(new Event('input',{bubbles:true}));};
+          const paint=(toolIndex,color,size,points)=>{const btn=toolButton(toolIndex);btn&&btn.click();setColor(color);setSize(size);window.__paintLog=window.__paintLog||[];const before=window.grimStudioDiagnostics.getPerformanceSnapshot().storedDabs;return wait(250).then(()=>{
+            const first=points[0];
+            const down=new PointerEvent('pointerdown',{clientX:first[0],clientY:first[1],button:0,buttons:1,pointerId:21,bubbles:true,cancelable:true});
+            try{down.getCoalescedEvents=()=>[down];}catch{}
+            stage.dispatchEvent(down);
+            return points.slice(1).reduce((chain,pt)=>chain.then(()=>{const ev=new PointerEvent('pointermove',{clientX:pt[0],clientY:pt[1],button:0,buttons:1,pointerId:21,bubbles:true,cancelable:true});try{ev.getCoalescedEvents=()=>[ev];}catch{}stage.dispatchEvent(ev);return wait(45);}),wait(30));
+          }).then(()=>{const last=points[points.length-1];stage.dispatchEvent(new PointerEvent('pointerup',{clientX:last[0],clientY:last[1],pointerId:21,bubbles:true}));return wait(350);}).then(()=>{
+            const after=window.grimStudioDiagnostics.getPerformanceSnapshot().storedDabs;
+            window.__paintLog.push(toolIndex+':'+(after-before)+'dabs@'+points[0]);
+            return wait(80);
+          });};
+          // A small makeup demo: eyeshadow, blush, lipstick. Coordinates are
+          // calibrated against the 2.5.2 head framing (brows ≈ cy-155, lips ≈ cy).
+          return paint(9,'#6a4a8c',38,[[cx-150,cy-152],[cx-125,cy-146],[cx-100,cy-150],[cx-125,cy-142]])
+            .then(()=>paint(9,'#6a4a8c',38,[[cx+100,cy-150],[cx+125,cy-146],[cx+150,cy-152],[cx+125,cy-142]]))
+            .then(()=>paint(6,'#e86e8a',85,[[cx-130,cy-45],[cx-118,cy-36],[cx-106,cy-45],[cx-120,cy-26]]))
+            .then(()=>paint(6,'#e86e8a',85,[[cx+106,cy-45],[cx+118,cy-36],[cx+130,cy-45],[cx+120,cy-26]]))
+            .then(()=>paint(12,'#c2185b',32,[[cx-52,cy-2],[cx-26,cy+4],[cx,cy+6],[cx+26,cy+4],[cx+52,cy-2],[cx+26,cy+8],[cx,cy+10],[cx-26,cy+8]]))
+            .then(()=>paint(12,'#c2185b',28,[[cx-30,cy+18],[cx,cy+22],[cx+30,cy+18]]))
+            .then(()=>{const ev=new PointerEvent('pointermove',{clientX:cx-300,clientY:cy-280,button:0,buttons:0,pointerId:22,bubbles:true,cancelable:true});try{ev.getCoalescedEvents=()=>[ev];}catch{}stage.dispatchEvent(ev);return wait(400);})
+            .then(()=>({status:document.querySelector('#status').textContent,dabs:window.grimStudioDiagnostics.getPerformanceSnapshot().storedDabs}));
+        })()`, true);
+      }).then((info) => { console.log('[capture] paint info', JSON.stringify(info)); return capture('screenshot-painted.png'); }).then(() => {
+        // Fourth shot: the same makeup with the head slightly turned.
+        return win.webContents.executeJavaScript(`(async () => {
+          const wait=(ms)=>new Promise(r=>setTimeout(r,ms));
+          const stage=document.querySelector('#stage');
+          const rect=stage.getBoundingClientRect();
+          const cx=rect.left+rect.width/2, cy=rect.top+rect.height/2;
+          const startX=cx+180;
+          const down=new PointerEvent('pointerdown',{clientX:startX,clientY:cy,button:2,buttons:2,pointerId:23,bubbles:true,cancelable:true});
+          stage.dispatchEvent(down);
+          for(let i=1;i<=5;i++){
+            const ev=new PointerEvent('pointermove',{clientX:startX+i*7,clientY:cy,button:2,buttons:2,pointerId:23,bubbles:true,cancelable:true});
+            stage.dispatchEvent(ev);
+            await wait(45);
+          }
+          stage.dispatchEvent(new PointerEvent('pointerup',{clientX:startX+35,clientY:cy,pointerId:23,button:2,bubbles:true}));
+          await wait(500);
+          return true;
+        })()`, true);
+      }).then(() => capture('screenshot-turned.png')).then(() => {
+        return win.webContents.executeJavaScript(`document.querySelector('#settingsToggle')?.click();true`, true);
+      }).then(() => {
+        return new Promise((resolve) => setTimeout(resolve, 500)).then(() => capture('screenshot-settings.png'));
+      }).then(() => { clearTimeout(timeout); app.exit(0); })
+      .catch((error) => { clearTimeout(timeout); console.error('[capture] ERROR', error); app.exit(1); });
+    }, 1500);
+  });
 }
 // Headless-ish functional check: paints strokes, samples the eyedropper,
 // erases, selects blend tools and moves lighting sliders, then prints PASS/FAIL
@@ -198,8 +285,9 @@ function runSelfTest(win) {
   });
 }
 app.whenReady().then(() => {
-  // Self-tests must start from a clean state: drop any autosaved project first.
-  if (process.argv.includes('--grim-selftest')) {
+  // Self-tests and screenshot captures must start from a clean state: drop any
+  // autosaved project first (it would restore a turned view and old paint).
+  if (process.argv.includes('--grim-selftest') || process.argv.includes('--grim-capture')) {
     try { fs.rmSync(path.join(app.getPath('userData'), AUTOSAVE_FILE), { force: true }); } catch {}
   }
   if (process.platform === 'win32') app.setAppUserModelId('com.grimstudio.desktop');
