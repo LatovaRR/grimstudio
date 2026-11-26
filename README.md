@@ -36,6 +36,37 @@
 
 ---
 
+## 💎 Support · Поддержать проект
+
+GrimStudio is free. If it is useful to you, you can support development with a TON donation.
+GrimStudio бесплатен. Если приложение вам полезно, можно поддержать разработку донатом в TON.
+
+<div align="center">
+
+<img src="docs/donate-ton-qr.png" width="300" alt="TON donation QR" />
+
+</div>
+
+**Address · Адрес (TON network only · только сеть TON):**
+
+```
+UQC4yRjAxohUwu6qDN074EzPPvyC619nGBUM1YBzxksZBk5M
+```
+
+> ⚠️ **Send only TON (GRAM) and TON-network tokens to this address** (USDT works only as a jetton
+> inside the TON network). Transfers from other networks — TRC-20, ERC-20, BEP-20 — **will be lost**.
+>
+> ⚠️ **На этот адрес отправляйте только TON (GRAM) и токены сети TON** (USDT доходит только
+> как жетон внутри сети TON). Переводы из других сетей — TRC-20, ERC-20, BEP-20 — **будут потеряны**.
+>
+> Scan the QR with any TON wallet (Tonkeeper, Telegram Wallet, MyTonWallet), or verify the address
+> on [tonviewer](https://tonviewer.com/UQC4yRjAxohUwu6qDN074EzPPvyC619nGBUM1YBzxksZBk5M).
+>
+> Отсканируйте QR любым TON-кошельком (Tonkeeper, Telegram Wallet, MyTonWallet) или проверьте
+> адрес на [tonviewer](https://tonviewer.com/UQC4yRjAxohUwu6qDN074EzPPvyC619nGBUM1YBzxksZBk5M).
+
+---
+
 ## 🇬🇧 English
 
 GrimStudio is a desktop 3D makeup and face-paint studio. Paint directly on a realistic 3D head: every stroke is attached to the surface, follows its curvature and inherits its lighting — the original model materials are never modified.

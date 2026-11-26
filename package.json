@@ -14,11 +14,11 @@
     "test": "npm run validate:assets && npm run build:renderer && node tests/smoke-test.cjs && node tests/spatial-raycast-test.cjs && node tests/model-assets-test.cjs",
     "test:static": "npm run validate:assets && node tests/smoke-test.cjs && node tests/spatial-raycast-test.cjs && node tests/model-assets-test.cjs"
   },
-  "dependencies": {},
   "devDependencies": {
     "electron": "45.4.1",
     "electron-builder": "26.18.1",
     "esbuild": "0.28.2",
+    "qrcode": "^1.5.4",
     "three": "0.187.0"
   },
   "build": {
