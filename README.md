@@ -72,6 +72,14 @@ UQC4yRjAxohUwu6qDN074EzPPvyC619nGBUM1YBzxksZBk5M
 > Отсканируйте QR любым TON-кошельком (Tonkeeper, Telegram Wallet, MyTonWallet) или проверьте
 > адрес на [tonviewer](https://tonviewer.com/UQC4yRjAxohUwu6qDN074EzPPvyC619nGBUM1YBzxksZBk5M).
 
+### ✉️ Feedback · Обратная связь
+
+Bugs, complaints and suggestions — write directly:
+Ошибки, жалобы и предложения — пишите напрямую:
+
+- **Email:** [grimstudiofeedback@gmail.com](mailto:grimstudiofeedback@gmail.com)
+- **Boosty DM:** [boosty.to/latovarr](https://boosty.to/latovarr) (личные сообщения · личные сообщения)
+
 ---
 
 ## 🇬🇧 English
