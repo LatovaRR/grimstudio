@@ -51,7 +51,7 @@ GrimStudio бесплатен. Если приложение вам полезн
 
 **Two ways · Два способа:**
 
-- **Boosty · рубли** — [boosty.to/latovarr](https://boosty.to/latovarr): карты и СБП, разовые донаты.
+- **Boosty · рубли** — [boosty.to/latovarr](https://boosty.to/latovarr): карты и СБП, разовые донаты и подписки.
 - **TON crypto · крипта** — QR ниже или адрес в сети TON.
 
 **Address · Адрес (TON network only · только сеть TON):**
