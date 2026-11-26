@@ -78,7 +78,7 @@ Bugs, complaints and suggestions — write directly:
 Ошибки, жалобы и предложения — пишите напрямую:
 
 - **Email:** [grimstudiofeedback@gmail.com](mailto:grimstudiofeedback@gmail.com)
-- **Boosty DM:** [boosty.to/latovarr](https://boosty.to/latovarr) (личные сообщения · личные сообщения)
+- **Boosty DM:** [boosty.to/latovarr](https://boosty.to/latovarr) (личные сообщения · DM)
 
 ---
 
