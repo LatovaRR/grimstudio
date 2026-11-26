@@ -41,13 +41,15 @@ const rendererSource = `(async () => {
   ctx.lineWidth = 5;
   ctx.strokeRect(14, 14, ${WIDTH - 28}, ${HEIGHT - 28});
 
+  // Safe-zone layout: the desktop crop keeps only the central vertical band
+  // (~y 210..430 of 640), so every piece of information lives inside it.
   // Mask icon on the left, vertically centered.
   ctx.save();
-  ctx.translate(330, ${HEIGHT / 2});
-  ctx.scale(16, 16);
+  ctx.translate(300, ${HEIGHT / 2});
+  ctx.scale(11, 11);
   ctx.translate(-12, -12);
   ctx.strokeStyle = '#c9a86a';
-  ctx.lineWidth = 1.55;
+  ctx.lineWidth = 1.9;
   ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
   ctx.stroke(new Path2D('M5.5 3.5h13v7.2c0 5.4-3.7 8.9-6.5 10-2.8-1.1-6.5-4.6-6.5-10z'));
@@ -58,19 +60,19 @@ const rendererSource = `(async () => {
   // Wordmark.
   ctx.fillStyle = '#c9a86a';
   ctx.textAlign = 'left';
-  ctx.font = 'bold 118px "Segoe UI", Arial, sans-serif';
-  ctx.fillText('GrimStudio', 640, 290);
+  ctx.font = 'bold 96px "Segoe UI", Arial, sans-serif';
+  ctx.fillText('GrimStudio', 540, 305);
 
   // Tagline.
   ctx.fillStyle = '#8f959e';
-  ctx.font = '38px "Segoe UI", Arial, sans-serif';
-  ctx.fillText('Профессиональная 3D-студия грима · Бесплатно · Открытый код', 640, 402);
+  ctx.font = '32px "Segoe UI", Arial, sans-serif';
+  ctx.fillText('Профессиональная 3D-студия грима · Бесплатно · Открытый код', 540, 392);
 
-  // Small footer link on the right.
+  // Small footer link on the right, inside the safe band.
   ctx.fillStyle = '#5d636c';
-  ctx.font = '28px "Segoe UI", Arial, sans-serif';
+  ctx.font = '24px "Segoe UI", Arial, sans-serif';
   ctx.textAlign = 'right';
-  ctx.fillText('github.com/LatovaRR/grimstudio', ${WIDTH - 70}, ${HEIGHT - 56});
+  ctx.fillText('github.com/LatovaRR/grimstudio', ${WIDTH - 60}, 385);
 
   return canvas.toDataURL('image/png');
 })()`;
