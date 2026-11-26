@@ -7,3 +7,4 @@ App icon: regenerated multi-size ICO with the minimalist makeup-mask mark (scrip
 Git: versioned history with tags v2.5.1 (baseline) and v2.5.2.
 Windows installer/portable: build ready; run 'Build Windows Installer.bat' on Windows with Node.js 20+.
 GitHub: https://github.com/LatovaRR/grimstudio (private; tags v2.5.1, v2.5.2).
+GitHub release v2.5.2: installer + portable exe + source zip published (private repo).
