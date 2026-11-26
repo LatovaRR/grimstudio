@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "models": {
+    "male": {
+      "displayName": "Male Head",
+      "obj": "male/model.obj",
+      "mtl": "male/model.mtl",
+      "textures": []
+    },
+    "female": {
+      "displayName": "Female Head",
+      "obj": "female/model.obj",
+      "mtl": "female/model.mtl",
+      "textures": []
+    }
+  }
+}

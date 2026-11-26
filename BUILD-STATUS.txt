@@ -1,0 +1,6 @@
+GrimStudio 2.5.1 source update
+
+Static validation: passed (assets, smoke, spatial raycast, model integrity).
+Renderer bundle: built (esbuild).
+Functional self-test (electron . --grim-selftest): PASS - painting, eyedropper compositing, blur/smudge/blender, hold-drag eraser, lighting controls, brush preview, accent color.
+Windows installer/portable: build ready; run 'Build Windows Installer.bat' on Windows with Node.js 20+.
