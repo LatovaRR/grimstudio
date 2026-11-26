@@ -6,3 +6,4 @@ Functional self-test (electron . --grim-selftest): PASS.
 App icon: regenerated multi-size ICO with the minimalist makeup-mask mark (scripts/generate-app-icon.cjs).
 Git: versioned history with tags v2.5.1 (baseline) and v2.5.2.
 Windows installer/portable: build ready; run 'Build Windows Installer.bat' on Windows with Node.js 20+.
+GitHub: https://github.com/LatovaRR/grimstudio (private; tags v2.5.1, v2.5.2).

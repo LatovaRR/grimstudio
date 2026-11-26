@@ -1,6 +1,8 @@
 # GrimStudio 2.5.2
 
-GrimStudio is an Electron desktop 3D makeup and face-paint editor. This release adds a real-time lighting studio (color temperature, light direction, real-life presets), working blend tools (blur, smudge, blender), a rebuilt eraser, lit brush overlays that preserve facial shading, live brush previews and shape presets, and a fully rewritten professional interface with custom vector icons.
+GrimStudio is an Electron desktop 3D makeup and face-paint editor. This release adds a real-time lighting studio (color temperature, light direction, real-life presets), working blend tools (blur, blender), a rebuilt flicker-free eraser, lit brush overlays that preserve facial shading, live brush previews and shape presets, a selectable accent color, and a fully rewritten professional interface with custom vector icons.
+
+Repository: https://github.com/LatovaRR/grimstudio (private)
 
 ## Model assets
 
