@@ -38,14 +38,21 @@
 
 ## 💎 Support · Поддержать проект
 
-GrimStudio is free. If it is useful to you, you can support development with a TON donation.
-GrimStudio бесплатен. Если приложение вам полезно, можно поддержать разработку донатом в TON.
+GrimStudio is free. If it is useful to you, you can support development:
+GrimStudio бесплатен. Если приложение вам полезно, можно поддержать разработку:
 
 <div align="center">
+
+<a href="https://boosty.to/latovarr"><img src="docs/donate-boosty-badge.png" width="300" alt="Support on Boosty · Поддержать на Boosty" /></a>
 
 <img src="docs/donate-ton-qr.png" width="300" alt="TON donation QR" />
 
 </div>
+
+**Two ways · Два способа:**
+
+- **Boosty · рубли** — [boosty.to/latovarr](https://boosty.to/latovarr): карты и СБП, разовые донаты.
+- **TON crypto · крипта** — QR ниже или адрес в сети TON.
 
 **Address · Адрес (TON network only · только сеть TON):**
 
