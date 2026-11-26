@@ -8,11 +8,11 @@ const fs = require('fs');
 const path = require('path');
 
 const SIZES = [16, 24, 32, 48, 64, 128, 256];
+const HIGH_RES = 1024;
 
 // Serialized into the renderer: draws the icon at one size and returns a PNG data URL.
 const rendererSource = `(async () => {
-  const drawIcon = (size) => {
-    const canvas = document.createElement('canvas');
+  const drawIcon = (size) => {    const canvas = document.createElement('canvas');
     canvas.width = size; canvas.height = size;
     const ctx = canvas.getContext('2d');
     // Dark rounded-square backdrop with a subtle vertical gradient.
@@ -43,6 +43,7 @@ const rendererSource = `(async () => {
     ctx.restore();
     return canvas.toDataURL('image/png');
   };
+  window.drawIcon = drawIcon;
   return ${JSON.stringify(SIZES)}.map((size) => ({ size, dataUrl: drawIcon(size) }));
 })()`;
 
@@ -85,7 +86,9 @@ app.whenReady().then(() => {
       const bySize = new Map(pngs.map((entry) => [entry.size, entry.data]));
       fs.writeFileSync(path.join(assets, 'app-icon.ico'), buildIco(pngs));
       fs.writeFileSync(path.join(assets, 'app-icon.png'), bySize.get(256));
-      console.log(`[app-icon] generated app-icon.ico (${pngs.length} sizes) and app-icon.png`);
+      // High-resolution PNG for store pages, README headers and promo use.
+      fs.writeFileSync(path.join(assets, 'app-icon-1024.png'), Buffer.from(await win.webContents.executeJavaScript(`drawIcon(${HIGH_RES})`, true).then((dataUrl) => String(dataUrl).slice('data:image/png;base64,'.length)), 'base64'));
+      console.log(`[app-icon] generated app-icon.ico (${pngs.length} sizes), app-icon.png and app-icon-1024.png`);
       app.exit(0);
     } catch (error) {
       console.error('[app-icon] generation failed:', error);
