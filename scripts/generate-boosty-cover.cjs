@@ -1,5 +1,5 @@
 /**
- * Generates the Boosty channel cover (1920×1080, brand-styled) at
+ * Generates the Boosty channel cover (1920×640, 3:1, brand-styled) at
  * docs/boosty-cover.png. Run with the Electron runtime:
  * `electron scripts/generate-boosty-cover.cjs`
  */
@@ -7,7 +7,7 @@ const { app, BrowserWindow } = require('electron');
 const fs = require('fs');
 const path = require('path');
 
-const WIDTH = 1920, HEIGHT = 1080;
+const WIDTH = 1920, HEIGHT = 640;
 
 const rendererSource = `(async () => {
   const canvas = document.createElement('canvas');
@@ -24,8 +24,8 @@ const rendererSource = `(async () => {
   // Faint watermark: a giant mask outline on the right, barely visible.
   ctx.save();
   ctx.globalAlpha = 0.07;
-  ctx.translate(${WIDTH - 260}, ${HEIGHT / 2});
-  ctx.scale(44, 44);
+  ctx.translate(${WIDTH - 170}, ${HEIGHT / 2});
+  ctx.scale(30, 30);
   ctx.translate(-12, -12);
   ctx.strokeStyle = '#c9a86a';
   ctx.lineWidth = 1.2;
@@ -38,13 +38,13 @@ const rendererSource = `(async () => {
 
   // Thin brass frame.
   ctx.strokeStyle = 'rgba(201,168,106,0.45)';
-  ctx.lineWidth = 6;
-  ctx.strokeRect(18, 18, ${WIDTH - 36}, ${HEIGHT - 36});
+  ctx.lineWidth = 5;
+  ctx.strokeRect(14, 14, ${WIDTH - 28}, ${HEIGHT - 28});
 
-  // Mask icon, centered above the wordmark.
+  // Mask icon on the left, vertically centered.
   ctx.save();
-  ctx.translate(${WIDTH / 2}, 320);
-  ctx.scale(20, 20);
+  ctx.translate(330, ${HEIGHT / 2});
+  ctx.scale(16, 16);
   ctx.translate(-12, -12);
   ctx.strokeStyle = '#c9a86a';
   ctx.lineWidth = 1.55;
@@ -57,19 +57,20 @@ const rendererSource = `(async () => {
 
   // Wordmark.
   ctx.fillStyle = '#c9a86a';
-  ctx.textAlign = 'center';
-  ctx.font = 'bold 128px "Segoe UI", Arial, sans-serif';
-  ctx.fillText('GrimStudio', ${WIDTH / 2}, 700);
+  ctx.textAlign = 'left';
+  ctx.font = 'bold 118px "Segoe UI", Arial, sans-serif';
+  ctx.fillText('GrimStudio', 640, 290);
 
   // Tagline.
   ctx.fillStyle = '#8f959e';
-  ctx.font = '46px "Segoe UI", Arial, sans-serif';
-  ctx.fillText('Профессиональная 3D-студия грима · Бесплатно · Открытый код', ${WIDTH / 2}, 800);
+  ctx.font = '38px "Segoe UI", Arial, sans-serif';
+  ctx.fillText('Профессиональная 3D-студия грима · Бесплатно · Открытый код', 640, 402);
 
-  // Small footer link.
+  // Small footer link on the right.
   ctx.fillStyle = '#5d636c';
-  ctx.font = '30px "Segoe UI", Arial, sans-serif';
-  ctx.fillText('github.com/LatovaRR/grimstudio', ${WIDTH / 2}, ${HEIGHT - 100});
+  ctx.font = '28px "Segoe UI", Arial, sans-serif';
+  ctx.textAlign = 'right';
+  ctx.fillText('github.com/LatovaRR/grimstudio', ${WIDTH - 70}, ${HEIGHT - 56});
 
   return canvas.toDataURL('image/png');
 })()`;
