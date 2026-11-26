@@ -36,10 +36,21 @@
 
 ---
 
+## ✉️ Feedback · Обратная связь
+
+Bugs, complaints and suggestions — write directly:
+Ошибки, жалобы и предложения — пишите напрямую:
+
+- **Email:** [grimstudiofeedback@gmail.com](mailto:grimstudiofeedback@gmail.com)
+- **Boosty DM:** [boosty.to/latovarr](https://boosty.to/latovarr) (личные сообщения · DM)
+
+---
+
 ## 💎 Support · Поддержать проект
 
-GrimStudio is free. If it is useful to you, you can support development:
-GrimStudio бесплатен. Если приложение вам полезно, можно поддержать разработку:
+GrimStudio is free. If it is useful to you, you can support development.
+
+GrimStudio бесплатен. Если приложение вам полезно, можно поддержать разработку.
 
 <div align="center">
 
@@ -71,14 +82,6 @@ UQC4yRjAxohUwu6qDN074EzPPvyC619nGBUM1YBzxksZBk5M
 >
 > Отсканируйте QR любым TON-кошельком (Tonkeeper, Telegram Wallet, MyTonWallet) или проверьте
 > адрес на [tonviewer](https://tonviewer.com/UQC4yRjAxohUwu6qDN074EzPPvyC619nGBUM1YBzxksZBk5M).
-
-### ✉️ Feedback · Обратная связь
-
-Bugs, complaints and suggestions — write directly:
-Ошибки, жалобы и предложения — пишите напрямую:
-
-- **Email:** [grimstudiofeedback@gmail.com](mailto:grimstudiofeedback@gmail.com)
-- **Boosty DM:** [boosty.to/latovarr](https://boosty.to/latovarr) (личные сообщения · DM)
 
 ---
 
