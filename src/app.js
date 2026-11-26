@@ -7,7 +7,7 @@ const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
 const HEAD_MODEL_REGISTRY = Object.freeze([{id:'male',name:'Male Head',objFile:'Male Average Head.obj',mtlFile:'Male Average Head.mtl'},{id:'female',name:'Female Head',objFile:'Female Average Head.obj',mtlFile:'Female Average Head.mtl'}]);
 let currentHeadModelId = 'male';
 const modelSessions = new Map();
-const MODEL_HASH = 'grimstudio-2.5.1-dual-heads-obj-mtl';
+const MODEL_HASH = 'grimstudio-2.5.2-dual-heads-obj-mtl';
 const MAX_LAYERS = 10;
 const MAX_HISTORY = 100;
 let adaptiveScale=1,slowRenderSamples=0,fastRenderSamples=0;
@@ -20,14 +20,15 @@ const I18N = {
     tools:'MAKEUP TOOLS',all:'All',paint:'Paint',face:'Face',blend:'Blend',advanced:'Advanced',size:'Size',opacity:'Opacity',softness:'Edge softness',flow:'Flow',symmetry:'Mirror painting (X axis)',view:'VIEW',front:'Front',left:'Left',right:'Right',back:'Back',reset:'Reset',viewHint:'Left button paints · Hold right button to rotate · Wheel to zoom',headModel:'HEAD MODEL',settingsTitle:'Settings',skinTone:'Skin tone',retry:'Retry loading',
     viewportHint:'Paint: left button · Rotate: hold right button · Pan: middle button · Zoom: wheel',color:'COLOR',activePigment:'Active pigment',layers:'MAKEUP LAYERS',layerOpacity:'Layer opacity',rename:'Rename',delete:'Delete',workflow:'WORKFLOW',workflowText:'Makeup is stored as surface-attached decals in independent layers. Original head materials and textures are never edited.',undo:'Undo',redo:'Redo',brushSize:'Brush size',
     ready:'Ready',loading:'Loading head model…',preparing:'Preparing isolated paint surface…',loaded:'Head surface ready',graphicsError:'3D graphics could not be initialized',retryText:'Check hardware acceleration and graphics drivers, then retry.',modelError:'Could not load the head model',
-    toolNames:['Brush','Airbrush','Powder','Sponge','Foundation','Concealer','Blush','Contour','Highlighter','Eyeshadow','Eyeliner','Pencil','Lipstick','Lip Gloss','Mascara','Eyebrow','Blur','Smudge','Blender','Eraser','Stencil','Stamp','Symmetry','Eyedropper'],
-    toolTips:['Build soft, controllable pigment with smooth surface stamps.','Spray a feathered pigment cloud with gradual buildup.','Apply fine, low-contrast powder grain.','Dab a porous, irregular pigment texture.','Lay down a broad, natural base layer.','Apply precise localized coverage.','Create a soft circular cheek color gradient.','Apply a soft directional contour wash.','Add a soft luminous cosmetic layer.','Create a softly blended eye-area color.','Draw narrow, crisp cosmetic lines.','Create precise hard-edged detail strokes.','Apply dense, creamy lip pigment.','Add a translucent glossy highlight layer.','Create fine directional lash-like marks.','Create fine hair-like brow strokes.','Repaint the area with the local averaged pigment, softly feathering hard edges.','Drag nearby pigment of the active layer across the surface along the stroke for a real directional smear.','Mix the local pigment tones with the active color using a translucent veil.','Erase paint along the brush path on the active layer.','Apply a star-shaped decorative stencil.','Place a decorative rosette stamp.','Toggle mirrored painting across the model X axis.','Sample the composited pigment where colors have mixed.'],
+    toolNames:['Brush','Airbrush','Powder','Sponge','Foundation','Concealer','Blush','Contour','Highlighter','Eyeshadow','Eyeliner','Pencil','Lipstick','Lip Gloss','Mascara','Eyebrow','Blur','Blender','Eraser','Stencil','Stamp','Symmetry','Eyedropper'],
+    toolTips:['Build soft, controllable pigment with smooth surface stamps.','Spray a feathered pigment cloud with gradual buildup.','Apply fine, low-contrast powder grain.','Dab a porous, irregular pigment texture.','Lay down a broad, natural base layer.','Apply precise localized coverage.','Create a soft circular cheek color gradient.','Apply a soft directional contour wash.','Add a soft luminous cosmetic layer.','Create a softly blended eye-area color.','Draw narrow, crisp cosmetic lines.','Create precise hard-edged detail strokes.','Apply dense, creamy lip pigment.','Add a translucent glossy highlight layer.','Create fine directional lash-like marks.','Create fine hair-like brow strokes.','Repaint the area with the local averaged pigment, softly feathering hard edges.','Mix the local pigment tones with the active color using a translucent veil.','Erase paint along the brush path on the active layer.','Apply a star-shaped decorative stencil.','Place a decorative rosette stamp.','Toggle mirrored painting across the model X axis.','Sample the composited pigment where colors have mixed.'],
     layerName:'Layer',baseLayer:'Base Makeup',layerAdded:'Layer added',layerDuplicated:'Layer duplicated',layerLimit:'Layer limit reached',noLayer:'No active layer',locked:'Unlock this layer first',clearConfirm:'Clear all paint on',newConfirm:'Create a new project? Current paint will be cleared. Save first if needed.',renamed:'Layer name:',deleted:'Layer deleted',
     toolStatus:'Tool',strokeSaved:'Stroke saved',autosaved:'Autosaved',autosaveFailed:'Autosave failed',projectSaved:'Project saved',projectOpened:'Project opened',invalidProject:'Invalid project file',exported:'PNG exported',exportFailed:'Export failed',modelReadyToast:'Head model ready',
     system:'System',dark:'Dark',light:'Light',symmetryOn:'Symmetry enabled',symmetryOff:'Symmetry disabled',colorSampled:'Pigment sampled',legacyWarning:'This project contains legacy UV paint. New strokes use isolated surface decals; legacy paint is preserved as a separate compatibility layer.',surfaceIndex:'Building surface index',surfaceReady:'Surface index ready',
     brushSettings:'TOOL SETTINGS',faceCategory:'Face makeup',paintCategory:'Paint',blendCategory:'Blend & correction',advancedCategory:'Advanced',interaction:'CAMERA & PERFORMANCE',cameraRotation:'Camera rotation',cameraPan:'Camera pan',rightMouse:'Right mouse button',middleMouse:'Middle mouse button',spaceLeft:'Space + left mouse',shiftRight:'Shift + right mouse',disabled:'Disabled',rotateSensitivity:'Rotation sensitivity',zoomSensitivity:'Zoom sensitivity',performance:'Painting performance',performanceFast:'Performance',performanceBalanced:'Balanced',performanceQuality:'Quality',cameraHint:'Paint: left button · Rotate: assigned button · Pan: assigned button · Zoom: wheel',resetControls:'Reset camera settings',
     preview:'BRUSH PREVIEW',brushShape:'BRUSH SHAPE',shapeDefault:'Tool default',shapeSoft:'Soft round',shapeHard:'Hard round',shapeFlat:'Flat',shapeAir:'Airbrush',shapeSpeckle:'Speckle',shapePorous:'Porous',shapeHair:'Fine hair',shapeStar:'Star',shapeRosette:'Rosette',
     lighting:'LIGHTING',lightingPreset:'Lighting preset',lightTemp:'Color temperature',lightAzimuth:'Light azimuth',lightElevation:'Light elevation',lightIntensity:'Key light intensity',lightHint:'Direction is measured from the front of the model.',
+    lightFill:'Fill light',lightRim:'Rim light',lightAmbient:'Ambient light',
     lpStudio:'Studio portrait',lpVanity:'Vanity mirror',lpOvercast:'Overcast daylight',lpSun:'Direct sun',lpGolden:'Golden hour',lpSunset:'Sunset dusk',lpMoon:'Moonlight',lpBackstage:'Backstage lights',lpCandle:'Candlelight',lpRing:'Ring light',lpCustom:'Custom',
     appearance:'APPEARANCE',accentColor:'Accent color',accentReset:'Use default accent',accentBrass:'Brass',accentTeal:'Teal',accentSky:'Sky blue',accentViolet:'Violet',accentRose:'Rose',accentLime:'Lime',accentAmber:'Amber',accentCrimson:'Crimson'
   },
@@ -37,14 +38,15 @@ const I18N = {
     tools:'ИНСТРУМЕНТЫ ГРИМА',all:'Все',paint:'Рисование',face:'Лицо',blend:'Смешивание',advanced:'Дополнительно',size:'Размер',opacity:'Прозрачность',softness:'Мягкость края',flow:'Насыщенность',symmetry:'Зеркальное рисование (ось X)',view:'ВИД',front:'Спереди',left:'Слева',right:'Справа',back:'Сзади',reset:'Сбросить',viewHint:'ЛКМ — рисование · Удерживай ПКМ для вращения · Колесо — масштаб',headModel:'3D-МОДЕЛЬ ГОЛОВЫ',settingsTitle:'Настройки',skinTone:'Тон кожи',retry:'Повторить загрузку',
     viewportHint:'Рисование: ЛКМ · Вращение: удерживай ПКМ · Перемещение: средняя кнопка · Масштаб: колесо',color:'ЦВЕТ',activePigment:'Активный цвет',layers:'СЛОИ ГРИМА',layerOpacity:'Непрозрачность слоя',rename:'Переименовать',delete:'Удалить',workflow:'РАБОЧИЙ ПРОЦЕСС',workflowText:'Грим хранится как отдельные поверхностные проекции в независимых слоях. Исходные материалы и текстуры головы не изменяются.',undo:'Отменить',redo:'Повторить',brushSize:'Размер кисти',
     ready:'Готово',loading:'Загрузка модели головы…',preparing:'Подготовка изолированной поверхности рисования…',loaded:'Поверхность головы готова',graphicsError:'Не удалось инициализировать 3D-графику',retryText:'Проверь аппаратное ускорение и драйвер видеокарты, затем повтори попытку.',modelError:'Не удалось загрузить модель головы',
-    toolNames:['Кисть','Аэрограф','Пудра','Спонж','Тональная основа','Консилер','Румяна','Контуринг','Хайлайтер','Тени','Подводка','Карандаш','Помада','Блеск для губ','Тушь','Брови','Размытие','Размазывание','Смешивание','Ластик','Трафарет','Штамп','Симметрия','Пипетка'],
-    toolTips:['Мягкие управляемые мазки пигмента по поверхности.','Воздушное нанесение пигмента с плавным накоплением.','Мелкодисперсное нанесение пудры.','Нанесение текстурного пигмента точечными касаниями.','Широкое естественное нанесение тональной основы.','Точное локальное покрытие небольших участков.','Мягкий круговой градиент румян.','Мягкое направленное затемнение для контуринга.','Мягкий светящийся косметический слой.','Мягко растушёванный цвет для области глаз.','Тонкие чёткие косметические линии.','Точные детальные линии с жёстким краем.','Плотный кремовый пигмент для губ.','Полупрозрачный глянцевый слой.','Тонкие направленные штрихи, имитирующие ресницы.','Тонкие штрихи, имитирующие волоски бровей.','Перекрашивает участок усреднённым локальным пигментом, мягко сглаживая жёсткие края.','Переносит пигмент активного слоя по направлению движения кисти — настоящее размазывание.','Смешивает локальные оттенки с активным цветом полупрозрачным слоем.','Стирает мазки вдоль пути кисти на активном слое.','Нанесение декоративного трафарета в форме звезды.','Нанесение декоративного узора-розетки.','Включение зеркального рисования относительно оси X модели.','Выбор смешанного цвета в месте наложения мазков.'],
+    toolNames:['Кисть','Аэрограф','Пудра','Спонж','Тональная основа','Консилер','Румяна','Контуринг','Хайлайтер','Тени','Подводка','Карандаш','Помада','Блеск для губ','Тушь','Брови','Размытие','Смешивание','Ластик','Трафарет','Штамп','Симметрия','Пипетка'],
+    toolTips:['Мягкие управляемые мазки пигмента по поверхности.','Воздушное нанесение пигмента с плавным накоплением.','Мелкодисперсное нанесение пудры.','Нанесение текстурного пигмента точечными касаниями.','Широкое естественное нанесение тональной основы.','Точное локальное покрытие небольших участков.','Мягкий круговой градиент румян.','Мягкое направленное затемнение для контуринга.','Мягкий светящийся косметический слой.','Мягко растушёванный цвет для области глаз.','Тонкие чёткие косметические линии.','Точные детальные линии с жёстким краем.','Плотный кремовый пигмент для губ.','Полупрозрачный глянцевый слой.','Тонкие направленные штрихи, имитирующие ресницы.','Тонкие штрихи, имитирующие волоски бровей.','Перекрашивает участок усреднённым локальным пигментом, мягко сглаживая жёсткие края.','Смешивает локальные оттенки с активным цветом полупрозрачным слоем.','Стирает мазки вдоль пути кисти на активном слое.','Нанесение декоративного трафарета в форме звезды.','Нанесение декоративного узора-розетки.','Включение зеркального рисования относительно оси X модели.','Выбор смешанного цвета в месте наложения мазков.'],
     layerName:'Слой',baseLayer:'Основной грим',layerAdded:'Слой добавлен',layerDuplicated:'Слой дублирован',layerLimit:'Достигнут лимит слоёв',noLayer:'Нет активного слоя',locked:'Сначала разблокируй слой',clearConfirm:'Очистить весь грим на слое',newConfirm:'Создать новый проект? Текущий грим будет удалён. Сначала сохрани работу.',renamed:'Название слоя:',deleted:'Слой удалён',
     toolStatus:'Инструмент',strokeSaved:'Мазок сохранён',autosaved:'Автосохранение выполнено',autosaveFailed:'Ошибка автосохранения',projectSaved:'Проект сохранён',projectOpened:'Проект открыт',invalidProject:'Недопустимый файл проекта',exported:'PNG экспортирован',exportFailed:'Ошибка экспорта',modelReadyToast:'Модель головы готова',
     system:'Системная',dark:'Тёмная',light:'Светлая',symmetryOn:'Симметрия включена',symmetryOff:'Симметрия выключена',colorSampled:'Цвет выбран',legacyWarning:'Проект содержит старые UV-рисунки. Новые мазки используют изолированные проекции; старый грим сохранён в отдельном совместимом слое.',surfaceIndex:'Построение индекса поверхности',surfaceReady:'Индекс поверхности готов',
     brushSettings:'НАСТРОЙКИ ИНСТРУМЕНТА',faceCategory:'Макияж лица',paintCategory:'Рисование',blendCategory:'Смешивание и коррекция',advancedCategory:'Дополнительно',interaction:'КАМЕРА И ПРОИЗВОДИТЕЛЬНОСТЬ',cameraRotation:'Вращение камеры',cameraPan:'Перемещение камеры',rightMouse:'Правая кнопка мыши',middleMouse:'Средняя кнопка мыши',spaceLeft:'Пробел + левая кнопка',shiftRight:'Shift + правая кнопка',disabled:'Выключено',rotateSensitivity:'Чувствительность вращения',zoomSensitivity:'Чувствительность масштаба',performance:'Производительность рисования',performanceFast:'Производительность',performanceBalanced:'Баланс',performanceQuality:'Качество',cameraHint:'Рисование: ЛКМ · Вращение: назначенная кнопка · Перемещение: назначенная кнопка · Масштаб: колесо',resetControls:'Сбросить настройки камеры',
     preview:'ПРЕДПРОСМОТР КИСТИ',brushShape:'ФОРМА КИСТИ',shapeDefault:'Как у инструмента',shapeSoft:'Мягкий круглый',shapeHard:'Жёсткий круглый',shapeFlat:'Плоский',shapeAir:'Аэрограф',shapeSpeckle:'Крапинка',shapePorous:'Пористый',shapeHair:'Тонкие штрихи',shapeStar:'Звезда',shapeRosette:'Розетка',
     lighting:'ОСВЕЩЕНИЕ',lightingPreset:'Предустановка света',lightTemp:'Температура света',lightAzimuth:'Азимут света',lightElevation:'Высота света',lightIntensity:'Яркость ключевого света',lightHint:'Направление отсчитывается от лица модели.',
+    lightFill:'Заполняющий свет',lightRim:'Контровой свет',lightAmbient:'Фоновый свет',
     lpStudio:'Студийный портрет',lpVanity:'Зеркало гримёрки',lpOvercast:'Пасмурный день',lpSun:'Прямое солнце',lpGolden:'Золотой час',lpSunset:'Закат',lpMoon:'Лунный свет',lpBackstage:'Закулисные софиты',lpCandle:'Свет свечи',lpRing:'Кольцевая лампа',lpCustom:'Своё',
     appearance:'ОФОРМЛЕНИЕ',accentColor:'Акцентный цвет',accentReset:'Акцент по умолчанию',accentBrass:'Латунь',accentTeal:'Бирюза',accentSky:'Небесный',accentViolet:'Сиреневый',accentRose:'Розовый',accentLime:'Лаймовый',accentAmber:'Янтарный',accentCrimson:'Багровый'
   }
@@ -70,7 +72,6 @@ const TOOLS = [
   {key:'mascara',category:'face',icon:'mascara',radius:.26,aspect:1.45,mask:'hair',alpha:.82},
   {key:'eyebrow',category:'face',icon:'eyebrow',radius:.3,aspect:1.5,mask:'hair',alpha:.78},
   {key:'blur',category:'blend',icon:'blur',radius:1.5,aspect:1,mask:'blur',alpha:.14},
-  {key:'smudge',category:'blend',icon:'smudge',radius:.72,aspect:1,mask:'smear',alpha:.45},
   {key:'blender',category:'blend',icon:'blender',radius:1.2,aspect:1.05,mask:'blend',alpha:.16},
   {key:'eraser',category:'blend',icon:'eraser',radius:1.1,aspect:1,mask:'soft',alpha:1,action:true},
   {key:'stencil',category:'advanced',icon:'stencil',radius:1,aspect:1,mask:'star',alpha:.9},
@@ -97,7 +98,6 @@ const ICONS = {
   mascara:'<rect x="9.5" y="10" width="5" height="10.5" rx="1.5"/><path d="M12 10V7.5"/><path d="M10 4.8h4M12 3v4.5"/>',
   eyebrow:'<path d="M4 10.5c3-4.5 8.5-5.5 14-3.5"/><path d="M7 11.5l-1 2.2M11 9.8l-.5 2.4M15 9.2l.4 2.4M18 9.5l.8 2"/>',
   blur:'<circle cx="12" cy="12" r="7" stroke-dasharray="1.6 2.6"/><circle cx="12" cy="12" r="3"/>',
-  smudge:'<path d="M4 19c5 .6 10-1.4 13-5.4 1.7-2.3 2.3-4.8 1.9-7.9"/><path d="M15.7 6.9l3.2-1 .3 3.3"/>',
   blender:'<circle cx="9.4" cy="12" r="5.2"/><circle cx="14.6" cy="12" r="5.2"/>',
   eraser:'<path d="M15.6 4.6l4 4L11.2 17H7.4L5 14.6z"/><path d="M9.6 8.6l6 6"/><path d="M8 21h10"/>',
   stencil:'<path d="M12 3.5l2.5 5 5.5.8-4 3.9 1 5.5-5-2.7-5 2.7 1-5.5-4-3.9 5.5-.8z"/>',
@@ -147,21 +147,60 @@ function applySkinTone(){
 
 // ----- Lighting studio -----
 // Real-life lighting presets: each sets color temperature, key direction
-// (azimuth/elevation) and overall intensity. Azimuth 0° is straight in front
-// of the model's face, 90° is its right side.
+// (azimuth/elevation) and the balance between key, fill, rim and ambient
+// light. Azimuth 0° is straight in front of the model's face, 90° is its
+// right side. All intensity fields are unitless factors.
 const LIGHT_PRESETS=Object.freeze([
-  Object.freeze({key:'studio',temp:5500,az:25,el:45,intensity:1}),
-  Object.freeze({key:'vanity',temp:4700,az:0,el:22,intensity:1.05}),
-  Object.freeze({key:'overcast',temp:6500,az:10,el:70,intensity:.9}),
-  Object.freeze({key:'sun',temp:5300,az:40,el:55,intensity:1.15}),
-  Object.freeze({key:'golden',temp:3400,az:310,el:12,intensity:1}),
-  Object.freeze({key:'sunset',temp:2700,az:325,el:8,intensity:.95}),
-  Object.freeze({key:'moon',temp:8600,az:15,el:40,intensity:.5}),
-  Object.freeze({key:'backstage',temp:4000,az:335,el:60,intensity:1.25}),
-  Object.freeze({key:'candle',temp:1900,az:290,el:18,intensity:.8}),
-  Object.freeze({key:'ring',temp:5200,az:0,el:12,intensity:1.05})
+  Object.freeze({key:'studio',temp:5500,az:25,el:45,intensity:1,fill:.45,rim:.55,ambient:.5}),
+  Object.freeze({key:'vanity',temp:4700,az:0,el:22,intensity:1.05,fill:.9,rim:.3,ambient:.8}),
+  Object.freeze({key:'overcast',temp:6500,az:10,el:70,intensity:.9,fill:.95,rim:.4,ambient:1.1}),
+  Object.freeze({key:'sun',temp:5300,az:40,el:55,intensity:1.15,fill:.25,rim:.5,ambient:.35}),
+  Object.freeze({key:'golden',temp:3400,az:310,el:12,intensity:1,fill:.35,rim:.8,ambient:.35}),
+  Object.freeze({key:'sunset',temp:2700,az:325,el:8,intensity:.95,fill:.3,rim:.95,ambient:.3}),
+  Object.freeze({key:'moon',temp:8600,az:15,el:40,intensity:.5,fill:.2,rim:.45,ambient:.25}),
+  Object.freeze({key:'backstage',temp:4000,az:335,el:60,intensity:1.25,fill:1.1,rim:.8,ambient:.9}),
+  Object.freeze({key:'candle',temp:1900,az:290,el:18,intensity:.8,fill:.12,rim:.2,ambient:.15}),
+  Object.freeze({key:'ring',temp:5200,az:0,el:12,intensity:1.05,fill:1.05,rim:.35,ambient:.85})
 ]);
-let lighting={preset:'studio',temp:5500,az:25,el:45,intensity:1};
+let lighting={preset:'studio',temp:5500,az:25,el:45,intensity:1,fill:.45,rim:.55,ambient:.5};
+// Light-direction indicator: a small glowing marker at the key light position
+// plus a line from the model center, drawn on top of everything (depth test
+// off) so the source stays visible even behind the head.
+let lightGizmo=null;
+let lightGizmoVisible=false;
+function ensureLightGizmo(){
+  if(lightGizmo||!scene)return;
+  lightGizmo=new THREE.Group();
+  const marker=new THREE.Mesh(new THREE.SphereGeometry(.11,20,14),new THREE.MeshBasicMaterial({color:0xffd9a0,transparent:true,opacity:.95,depthTest:false,depthWrite:false,toneMapped:false}));
+  marker.renderOrder=900;
+  const halo=new THREE.Mesh(new THREE.SphereGeometry(.19,20,14),new THREE.MeshBasicMaterial({color:0xffc878,transparent:true,opacity:.28,depthTest:false,depthWrite:false,toneMapped:false}));
+  halo.renderOrder=899;
+  const line=new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,0,0),new THREE.Vector3(0,0,1)]),new THREE.LineBasicMaterial({color:0xffd9a0,transparent:true,opacity:.4,depthTest:false,depthWrite:false,toneMapped:false}));
+  line.renderOrder=898;
+  lightGizmo.add(marker);lightGizmo.add(halo);lightGizmo.add(line);
+  lightGizmo.userData={line};
+  lightGizmo.visible=lightGizmoVisible;
+  scene.add(lightGizmo);
+  updateLightGizmo();
+}
+function updateLightGizmo(){
+  if(!lightGizmo)return;
+  const position=lightDirection(lighting.az,lighting.el);
+  // The group sits at the model center; its child line (local +Z, length 1)
+  // is scaled to reach the light and the group is oriented toward it.
+  lightGizmo.position.set(0,0,0);
+  lightGizmo.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1),position.clone().normalize());
+  lightGizmo.userData.line.scale.set(1,1,position.length()*.93);
+  requestRender();
+}
+function toggleLightGizmo(){
+  lightGizmoVisible=!lightGizmoVisible;
+  ensureLightGizmo();
+  lightGizmo.visible=lightGizmoVisible;
+  $('#toggleLightGizmo')?.setAttribute('aria-pressed',String(lightGizmoVisible));
+  persistSettings();
+  requestRender();
+}
 // Tanner Helland's blackbody approximation, converted to a linear-light color.
 function kelvinToColor(kelvin){
   const t=clamp(kelvin,1000,40000)/100;
@@ -181,17 +220,17 @@ function lightDirection(azDeg,elDeg){
 function applyLighting(){
   if(!keyLight)return;
   const kelvin=kelvinToColor(lighting.temp);
-  const intensityScale=.9+.55*clamp(lighting.intensity,0,2);
   keyLight.color.copy(kelvin);
-  keyLight.intensity=3*intensityScale;
+  keyLight.intensity=3*lighting.intensity;
   keyLight.position.copy(lightDirection(lighting.az,lighting.el));
   fillLight.color.copy(kelvinToColor(THREE.MathUtils.lerp(lighting.temp,6800,.55)));
-  fillLight.intensity=1.15*intensityScale;
+  fillLight.intensity=1.15*lighting.fill;
   fillLight.position.copy(lightDirection(lighting.az+150,Math.max(14,lighting.el*.5)));
   rimLight.color.copy(kelvinToColor(clamp(lighting.temp+900,1200,12000)));
-  rimLight.intensity=1.5*intensityScale;
+  rimLight.intensity=1.5*lighting.rim;
   rimLight.position.copy(lightDirection(lighting.az+180,Math.min(80,lighting.el+18)));
-  hemisphereLight.intensity=1.7*intensityScale;
+  hemisphereLight.intensity=1.7*lighting.ambient;
+  updateLightGizmo();
   requestRender();
 }
 function setLighting(next,{fromPreset=false}={}){
@@ -199,7 +238,10 @@ function setLighting(next,{fromPreset=false}={}){
   lighting.az=clamp(Math.round(next.az??lighting.az),0,360)%360;
   lighting.el=clamp(Math.round(next.el??lighting.el),3,85);
   lighting.intensity=clamp(Math.round((next.intensity??lighting.intensity)*100)/100,.1,2);
-  lighting.preset=fromPreset?next.preset:(LIGHT_PRESETS.find(entry=>entry.key===lighting.preset&&entry.temp===lighting.temp&&entry.az===lighting.az&&entry.el===lighting.el&&Math.abs(entry.intensity-lighting.intensity)<.011)?.key||'custom');
+  lighting.fill=clamp(Math.round((next.fill??lighting.fill)*100)/100,0,2);
+  lighting.rim=clamp(Math.round((next.rim??lighting.rim)*100)/100,0,2);
+  lighting.ambient=clamp(Math.round((next.ambient??lighting.ambient)*100)/100,0,1.5);
+  lighting.preset=fromPreset?next.preset:(LIGHT_PRESETS.find(entry=>entry.key===lighting.preset&&entry.temp===lighting.temp&&entry.az===lighting.az&&entry.el===lighting.el&&Math.abs(entry.intensity-lighting.intensity)<.011&&Math.abs(entry.fill-lighting.fill)<.011&&Math.abs(entry.rim-lighting.rim)<.011&&Math.abs(entry.ambient-lighting.ambient)<.011)?.key||'custom');
   syncLightingUI();
   applyLighting();
   persistSettings();
@@ -208,7 +250,7 @@ function setLighting(next,{fromPreset=false}={}){
 function applyLightPreset(key){
   const preset=LIGHT_PRESETS.find(entry=>entry.key===key);
   if(!preset)return;
-  setLighting({preset:key,temp:preset.temp,az:preset.az,el:preset.el,intensity:preset.intensity},{fromPreset:true});
+  setLighting({preset:key,temp:preset.temp,az:preset.az,el:preset.el,intensity:preset.intensity,fill:preset.fill,rim:preset.rim,ambient:preset.ambient},{fromPreset:true});
 }
 
 // ----- Brush shape presets -----
@@ -307,7 +349,7 @@ function t(key) { return I18N[language]?.[key] ?? I18N.en[key] ?? key; }
 function toolName(index) { return I18N[language].toolNames[index] || I18N.en.toolNames[index]; }
 function toolTip(index) { return I18N[language].toolTips[index] || I18N.en.toolTips[index]; }
 function persistSettings() {
-  try { localStorage.setItem('grimstudio-settings', JSON.stringify({language,themePreference,symmetryEnabled,cameraRotateButton,cameraPanButton,rotationSensitivity,zoomSensitivity,performanceMode,graphicsQuality,adaptivePerformance,memoryOptimization,skinTone,lighting,brushShape:brushShapeOverride,accentColor})); } catch {}
+  try { localStorage.setItem('grimstudio-settings', JSON.stringify({language,themePreference,symmetryEnabled,cameraRotateButton,cameraPanButton,rotationSensitivity,zoomSensitivity,performanceMode,graphicsQuality,adaptivePerformance,memoryOptimization,skinTone,lighting,brushShape:brushShapeOverride,accentColor,lightGizmoVisible})); } catch {}
 }
 function loadSettings() {
   try {
@@ -329,10 +371,15 @@ function loadSettings() {
       lighting.az=clamp(Math.round(Number(value.lighting.az)||25),0,360)%360;
       lighting.el=clamp(Math.round(Number(value.lighting.el)||45),3,85);
       lighting.intensity=clamp(Number(value.lighting.intensity)||1,.1,2);
+      // 2.5.1 projects/settings have no fill/rim/ambient balance; 1 keeps the old brightness.
+      lighting.fill=clamp(Number(value.lighting.fill??1),0,2);
+      lighting.rim=clamp(Number(value.lighting.rim??1),0,2);
+      lighting.ambient=clamp(Number(value.lighting.ambient??1),0,1.5);
       lighting.preset=value.lighting.preset||'custom';
     }
     if (typeof value.brushShape==='string') brushShapeOverride=value.brushShape;
     if (typeof value.accentColor==='string'&&/^#[0-9a-f]{6}$/i.test(value.accentColor)) accentColor=value.accentColor.toLowerCase();
+    if (typeof value.lightGizmoVisible==='boolean') lightGizmoVisible=value.lightGizmoVisible;
   } catch {}
 }
 function applyTheme() {
@@ -619,7 +666,14 @@ function syncLightingUI(){
   $('#lightElevationReadout').textContent=`${lighting.el}°`;
   $('#lightIntensity').value=String(Math.round(lighting.intensity*100));
   $('#lightIntensityReadout').textContent=`${Math.round(lighting.intensity*100)}%`;
+  $('#lightFill').value=String(Math.round(lighting.fill*100));
+  $('#lightFillReadout').textContent=`${Math.round(lighting.fill*100)}%`;
+  $('#lightRim').value=String(Math.round(lighting.rim*100));
+  $('#lightRimReadout').textContent=`${Math.round(lighting.rim*100)}%`;
+  $('#lightAmbient').value=String(Math.round(lighting.ambient*100));
+  $('#lightAmbientReadout').textContent=`${Math.round(lighting.ambient*100)}%`;
   $('#lightingPreset').value=lighting.preset;
+  $('#toggleLightGizmo')?.setAttribute('aria-pressed',String(lightGizmoVisible));
 }
 function bindLightingControls(){
   populateLightingPresets();
@@ -628,6 +682,9 @@ function bindLightingControls(){
   $('#lightAzimuth').addEventListener('input',event=>setLighting({az:Number(event.target.value)}));
   $('#lightElevation').addEventListener('input',event=>setLighting({el:Number(event.target.value)}));
   $('#lightIntensity').addEventListener('input',event=>setLighting({intensity:Number(event.target.value)/100}));
+  $('#lightFill').addEventListener('input',event=>setLighting({fill:Number(event.target.value)/100}));
+  $('#lightRim').addEventListener('input',event=>setLighting({rim:Number(event.target.value)/100}));
+  $('#lightAmbient').addEventListener('input',event=>setLighting({ambient:Number(event.target.value)/100}));
 }
 function populateBrushShapes(){
   const grid=$('#brushShapeGrid');if(!grid)return;
@@ -917,6 +974,8 @@ const keyLight=new THREE.DirectionalLight(0xffe7dc,3);keyLight.position.set(2.5,
 const fillLight=new THREE.DirectionalLight(0xb8baff,1.3);fillLight.position.set(-3,1,2);scene.add(fillLight);
 const rimLight=new THREE.DirectionalLight(0xffffff,1.6);rimLight.position.set(0,2,-3);scene.add(rimLight);
 applyLighting();
+ensureLightGizmo();
+$('#toggleLightGizmo')?.addEventListener('click',toggleLightGizmo);
 orbit=new THREE.Group();orbit.rotation.y=Math.PI;scene.add(orbit);raycaster=new THREE.Raycaster();raycaster.params.Mesh.threshold=.005;
 function requestRender(){if(!renderer||renderQueued)return;renderQueued=true;requestAnimationFrame(()=>{renderQueued=false;if(renderer){const started=performance.now();renderer.render(scene,camera);const elapsed=performance.now()-started;perfStats.renderFrames++;updateAdaptiveQuality(elapsed);}});}
 function resize(){if(!renderer)return;const w=viewport.clientWidth,h=viewport.clientHeight;if(w<1||h<1)return;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();requestRender();}
@@ -1267,8 +1326,6 @@ function makeStampTexture(toolKey,softnessValue){
     ctx.globalCompositeOperation='destination-in';ctx.fillStyle='rgba(255,255,255,.88)';ctx.fillRect(0,0,size,size);ctx.globalCompositeOperation='source-over';
   }else if(mask==='blur'||mask==='blend'){
     radial(Math.max(0,edge*.02),62,[1,1]);
-  }else if(mask==='smear'){
-    radial(Math.max(0,edge*.03),62,[1,1]);
   }else{
     const inner=mask==='hard'?Math.max(.88,1-softnessValue):mask==='air'?.02:Math.max(.08,edge);radial(inner,62);
   }
@@ -1321,57 +1378,9 @@ function storeCurrentLayerSnapshot(){const layer=layers[activeLayer];if(!layer)r
 // zoomed in or out.
 const BRUSH_MAX_WORLD_RADIUS=.2;
 function radiusForHit(hit,tool){return Math.max(.004,BRUSH_MAX_WORLD_RADIUS*(brushSize/140)*(tool.radius||1));}
-function nearestPigmentRemoved(){}
-// Smudge physically displaces nearby paint dabs along the stroke direction.
-// The delta is projected onto the surface tangent plane and direction-smoothed
-// so per-sample jitter cannot tear the smear apart. Stroke objects are replaced
-// immutably, keeping undo history valid.
-function applySmudgeAt(hit){
-  const layer=layers[activeLayer];if(!layer||layer.locked)return;
-  const radius=radiusForHit(hit,TOOLS.find(item=>item.key==='smudge'));
-  const current={p:[...hit.point],n:[...hit.normal],r:radius};
-  const previous=activeStroke.lastSmudgeHit;
-  activeStroke.lastSmudgeHit=current;
-  if(!previous)return;
-  let dx=current.p[0]-previous.p[0],dy=current.p[1]-previous.p[1],dz=current.p[2]-previous.p[2];
-  const nx=current.n[0],ny=current.n[1],nz=current.n[2];
-  const dot=dx*nx+dy*ny+dz*nz;
-  dx-=dot*nx;dy-=dot*ny;dz-=dot*nz;
-  const len=Math.hypot(dx,dy,dz);
-  if(len<1e-5)return;
-  // Smooth the movement direction across samples.
-  const blend=.55;
-  if(activeStroke.dir){dx=dx*blend+activeStroke.dir[0]*(1-blend);dy=dy*blend+activeStroke.dir[1]*(1-blend);dz=dz*blend+activeStroke.dir[2]*(1-blend);}
-  const smoothLen=Math.hypot(dx,dy,dz)||1;
-  activeStroke.dir=[dx/smoothLen,dy/smoothLen,dz/smoothLen];
-  const reach=radius*1.6;
-  const strength=.75*Math.min(len,reach*1.5);
-  const ux=activeStroke.dir[0],uy=activeStroke.dir[1],uz=activeStroke.dir[2];
-  for(let index=0;index<layer.strokes.length;index++){
-    const stroke=layer.strokes[index];
-    if(!stroke.dabs?.length)continue;
-    // Cheap early-out: skip strokes with nothing inside the influence sphere.
-    let moved=false;
-    for(const dab of stroke.dabs){
-      const dist=Math.hypot(dab.p[0]-current.p[0],dab.p[1]-current.p[1],dab.p[2]-current.p[2]);
-      if(dist<=reach+dab.r){moved=true;break;}
-    }
-    if(!moved)continue;
-    let changed=false;
-    const newDabs=stroke.dabs.map((dab)=>{
-      const dist=Math.hypot(dab.p[0]-current.p[0],dab.p[1]-current.p[1],dab.p[2]-current.p[2]);
-      if(dist>reach+dab.r)return dab;
-      const falloff=Math.pow(1-clamp(dist/(reach+dab.r),0,1),1.2);
-      const move=strength*falloff;
-      if(move<1e-6)return dab;
-      changed=true;
-      return {...dab,p:[dab.p[0]+ux*move,dab.p[1]+uy*move,dab.p[2]+uz*move]};
-    });
-    if(changed){const updated={...stroke,dabs:newDabs,meshes:[],mesh:null};layer.strokes[index]=updated;activeStroke.touched.set(stroke.id??index,updated);}
-  }
-  // Rebuild the touched strokes once per animation frame for smooth live feedback.
-  if(activeStroke.touched.size)scheduleStrokeRebuild();
-}
+// Erased strokes keep their old meshes attached until the rebuild pass, so a
+// frame never renders a "stroke missing" state (that caused flicker). The
+// rebuild disposes the stale meshes and creates fresh geometry in one task.
 let strokeRebuildQueued=false;
 function scheduleStrokeRebuild(){
   if(strokeRebuildQueued)return;
@@ -1510,10 +1519,16 @@ function disposeStrokeMeshes(layer,stroke){
   geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());stroke.meshes=[];stroke.mesh=null;
 }
 // Erases every dab whose painted footprint intersects the brush path,
-// measured as point-to-segment distance, with an optional mirrored pass while
-// symmetry is enabled. Pure data pass: affected strokes are recorded into the
-// caller's `touched` map and rebuilt by scheduleStrokeRebuild(), so dragging
-// stays responsive and syncLayers only runs once per stroke.
+// measured as direct point-to-segment distance (per erase sample the path is
+// only one or two segments, so spatial bucketing is unnecessary — bucket
+// granularity could previously miss dabs with large radii), with an optional
+// mirrored pass while symmetry is enabled.
+//
+// This is a pure data pass: it never removes meshes, so no frame can render a
+// "stroke missing" state (the source of the old flicker). Instead, updated
+// stroke objects INHERIT the old meshes; the scheduled rebuild pass disposes
+// the stale meshes and builds fresh geometry in one synchronous task before
+// the next render.
 function eraseAlongPath(layer,path,touched){
   if(!layer||layer.locked||!path.length)return false;
   const segments=[];
@@ -1523,17 +1538,6 @@ function eraseAlongPath(layer,path,touched){
     const centerX=spatialIndexes[0].bounds.center[0];
     for(const [a,b] of segments.slice())segments.push([{p:[2*centerX-a.p[0],a.p[1],a.p[2]],n:a.n,r:a.r},{p:[2*centerX-b.p[0],b.p[1],b.p[2]],n:b.n,r:b.r}]);
   }
-  const maxRadius=segments.reduce((m,s)=>Math.max(m,s[0].r,s[1].r),.002),cellSize=Math.max(maxRadius*2.5,.004);
-  const buckets=new Map(),key=(x,y,z)=>`${x},${y},${z}`;
-  segments.forEach(segment=>{
-    const min=[Math.min(segment[0].p[0],segment[1].p[0]),Math.min(segment[0].p[1],segment[1].p[1]),Math.min(segment[0].p[2],segment[1].p[2])];
-    const max=[Math.max(segment[0].p[0],segment[1].p[0]),Math.max(segment[0].p[1],segment[1].p[1]),Math.max(segment[0].p[2],segment[1].p[2])];
-    for(let z=Math.floor(min[2]/cellSize);z<=Math.floor(max[2]/cellSize);z++)
-      for(let y=Math.floor(min[1]/cellSize);y<=Math.floor(max[1]/cellSize);y++)
-        for(let x=Math.floor(min[0]/cellSize);x<=Math.floor(max[0]/cellSize);x++){
-          const id=key(x,y,z);let list=buckets.get(id);if(!list)buckets.set(id,list=[]);list.push(segment);
-        }
-  });
   const segmentDistance=(dab,segment)=>{
     const [a,b]=segment,ax=a.p[0],ay=a.p[1],az=a.p[2];
     const bx=b.p[0]-ax,by=b.p[1]-ay,bz=b.p[2]-az;
@@ -1544,31 +1548,31 @@ function eraseAlongPath(layer,path,touched){
     const cx=px-bx*t,cy=py-by*t,cz=pz-bz*t;
     return Math.sqrt(cx*cx+cy*cy+cz*cz);
   };
-  const isErased=dab=>{
-    const base=Math.floor(dab.p[0]/cellSize),baseY=Math.floor(dab.p[1]/cellSize),baseZ=Math.floor(dab.p[2]/cellSize);
-    for(let z=-1;z<=1;z++)for(let y=-1;y<=1;y++)for(let x=-1;x<=1;x++){
-      const list=buckets.get(key(base+x,baseY+y,baseZ+z));if(!list)continue;
-      for(const segment of list){
-        const reach=segment[0].r+dab.r*.75;
-        if(segmentDistance(dab,segment)<reach)return true;
-      }
-    }
-    return false;
-  };
   let changed=false;const next=[];
   for(const stroke of layer.strokes){
+    if(!stroke.dabs?.length){next.push(stroke);continue;}
+    const reachBase=segments.reduce((m,s)=>Math.max(m,s[0].r,s[1].r),.002);
     // Early-out scan without allocating a filtered array for untouched strokes.
     let anyErased=false;
-    for(const dab of stroke.dabs){if(isErased(dab)){anyErased=true;break;}}
+    for(const dab of stroke.dabs){
+      for(const segment of segments){
+        if(segmentDistance(dab,segment)<reachBase+dab.r*.75){anyErased=true;break;}
+      }
+      if(anyErased)break;
+    }
     if(!anyErased){next.push(stroke);continue;}
     changed=true;
-    disposeStrokeMeshes(layer,stroke);
-    const dabs=stroke.dabs.filter(dab=>!isErased(dab));
-    if(dabs.length){
-      const updated={...stroke,dabs,meshes:[],mesh:null};
-      next.push(updated);
-      if(touched)touched.set(stroke.id??updated.id??dabs.length,updated);
-    }
+    const dabs=stroke.dabs.filter(dab=>{
+      for(const segment of segments){
+        if(segmentDistance(dab,segment)<reachBase+dab.r*.75)return false;
+      }
+      return true;
+    });
+    // Inherit the old meshes: they keep rendering (stale but harmless for one
+    // frame) until the rebuild pass replaces them synchronously.
+    const updated={...stroke,dabs,meshes:stroke.meshes||[],mesh:null};
+    if(touched)touched.set(stroke.id??updated.id??next.length,updated);
+    if(dabs.length)next.push(updated);
   }
   if(changed)layer.strokes=next;
   return changed;
@@ -1590,10 +1594,6 @@ function beginStroke(hit){
     activeStroke.lastEraseHit={p:[...hit.point],n:[...hit.normal],r:radius};
     if(eraseAlongPath(layers[activeLayer],[activeStroke.lastEraseHit,activeStroke.lastEraseHit],activeStroke.touched))activeStroke.erasedSomething=true;
     if(activeStroke.touched.size)scheduleStrokeRebuild();
-    isPainting=true;lastHit=hit;return true;
-  }
-  if(tool.key==='smudge'){
-    activeStroke={mode:'smudge',touched:new Map(),dir:null,lastSmudgeHit:{p:[...hit.point],n:[...hit.normal],r:radiusForHit(hit,tool)}};
     isPainting=true;lastHit=hit;return true;
   }
   activeStroke={mode:'paint',id:strokeSequence++,tool:tool.key,color,opacity,softness,flow,dabs:[],previewMeshes:[],previewMesh:null,vertexCount:0,vertexCapacity:0,dirty:false,material:null,skipDab:false};
@@ -1620,10 +1620,6 @@ function processStrokeHit(hit){
     activeStroke.lastEraseHit=current;
     if(eraseAlongPath(layers[activeLayer],previous?[previous,current]:[current,current],activeStroke.touched))activeStroke.erasedSomething=true;
     if(activeStroke.touched.size)scheduleStrokeRebuild();
-    lastHit=hit;return;
-  }
-  if(activeStroke.mode==='smudge'){
-    applySmudgeAt(hit);
     lastHit=hit;return;
   }
   if(!lastHit){addDab(hit);lastHit=hit;return;}
@@ -1661,8 +1657,6 @@ function finishStroke(){
     // layer thumbnails once at the end of the drag.
     if(activeStroke.touched?.size)rebuildTouchedStrokes();
     if(activeStroke.erasedSomething){syncLayers();storeCurrentLayerSnapshot();}
-  }else if(activeStroke?.mode==='smudge'){
-    if(activeStroke.touched?.size){rebuildTouchedStrokes();storeCurrentLayerSnapshot();}
   }
   activeStroke=null;isPainting=false;lastHit=null;requestRender();
 }
@@ -1740,7 +1734,7 @@ async function saveProject(){try{const result=await window.grim.saveProject(seri
 function validateProject(data){if(!data||data.format!=='GrimStudioProject'||!Array.isArray(data.layers)||data.layers.length>MAX_LAYERS)throw new Error('Not a valid GrimStudio project');for(const layer of data.layers){if(!layer||typeof layer!=='object')throw new Error('Invalid layer');if(layer.paint&&(!String(layer.paint).startsWith('data:image/png;base64,')||String(layer.paint).length>48_000_000))throw new Error('Invalid legacy paint image');if(layer.strokes&&!Array.isArray(layer.strokes))throw new Error('Invalid stroke collection');}return data;}
 async function openProject(){try{const result=await window.grim.openProject();if(result?.canceled)return;if(result?.error)throw new Error(result.error);const data=validateProject(JSON.parse(result.content));await restoreProject(data);toast(t('projectOpened'));}catch(error){toast(t('invalidProject'));console.error(error);}}
 async function restoreProject(data){$('#projectName').value=data.name||'Untitled Makeup';if(SKIN_TONES.some(entry=>entry.key===data.skinTone)){skinTone=data.skinTone;const row=$('#skinTones');row?.querySelectorAll('button').forEach(node=>node.classList.toggle('active',node.title===SKIN_TONES.find(entry=>entry.key===skinTone).name));}
-  if(data.lighting&&typeof data.lighting==='object'){setLighting({temp:data.lighting.temp,az:data.lighting.az,el:data.lighting.el,intensity:data.lighting.intensity,preset:data.lighting.preset},{fromPreset:data.lighting.preset&&data.lighting.preset!=='custom'});}
+  if(data.lighting&&typeof data.lighting==='object'){setLighting({temp:data.lighting.temp,az:data.lighting.az,el:data.lighting.el,intensity:data.lighting.intensity,fill:data.lighting.fill??1,rim:data.lighting.rim??1,ambient:data.lighting.ambient??1,preset:data.lighting.preset},{fromPreset:data.lighting.preset&&data.lighting.preset!=='custom'});}
   if(typeof data.brushShape==='string'&&BRUSH_SHAPES.some(shape=>shape.key===data.brushShape)){brushShapeOverride=data.brushShape==='default'?null:data.brushShape;populateBrushShapes();drawBrushPreview();}if(data.modelSessions&&typeof data.modelSessions==='object'){modelSessions.clear();for(const [key,value] of Object.entries(data.modelSessions))if(['male','female'].includes(key))modelSessions.set(key,value);}if(['male','female'].includes(data.model)&&data.model!==currentHeadModelId){currentHeadModelId=data.model;modelReady=false;modelPromise=null;await loadModel(true);}applySkinTone();layers.forEach((layer)=>{orbit.remove(layer.group);disposeGroup(layer.group);layer.legacyTexture?.dispose();});layers=[];layerCounter=1;
   for(const entry of data.layers){const layer=createLayer(String(entry.name||`${t('layerName')} ${layerCounter}`).slice(0,80),entry.legacyPaint||entry.paint||null);layer.visible=entry.visible!==false;layer.locked=entry.locked===true;layer.opacity=clamp(Number(entry.opacity??1),0,1);layer.strokes=Array.isArray(entry.strokes)?entry.strokes.map(cloneStrokeData):[];layers.push(layer);storeSnapshot(layer);}
   if(!layers.length){layers.push(createLayer(t('baseLayer')));}

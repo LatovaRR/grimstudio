@@ -51,8 +51,7 @@ Tools use differentiated stamp masks, footprint proportions, pigment strengths, 
 
 ## 2.5.1 updates
 
-- The eraser is fully continuous: each pointer sample erases along the segment between the previous and current surface positions (segment-distance test, optionally mirrored), with no span gating, so press-and-drag and single presses both work instantly. `eraseAlongPath` is now a pure data pass — affected strokes are recorded into a touched map and rebuilt once per animation frame; unaffected strokes are skipped through an allocation-free early-out scan, and layer thumbnails sync once per stroke instead of per pass.
-- Smudge projects its movement delta onto the surface tangent plane and smooths the direction across samples (jitter-proof), caps displacement relative to the brush reach, and rebuilds touched strokes every animation frame.
+- The eraser is fully continuous: each pointer sample erases along the segment between the previous and current surface positions (segment-distance test, optionally mirrored), with no span gating, so press-and-drag and single presses both work instantly. `eraseAlongPath` is now a pure data pass — affected strokes are recorded into a touched map and rebuilt once per animation frame; unaffected strokes are skipped through an allocation-free early-out scan, and layer thumbnails sync once per stroke instead of per pass.- Smudge projects its movement delta onto the surface tangent plane and smooths the direction across samples (jitter-proof), caps displacement relative to the brush reach, and rebuilds touched strokes every animation frame.
 - The on-model brush cursor renders the tool's actual stamp texture (tinted pigment, red tint for the eraser) plus a thin dark ring, shares one decal vertex buffer between both layers, and follows the pointer during painting via the pointer-queue flush. It auto-refreshes on tool/shape/softness/pigment changes.
 - Appearance: user-selectable accent color (8 presets + custom picker + reset) drives CSS custom properties including derived soft fill, border line and contrast text shades; the accent persists in settings.
 
@@ -65,3 +64,10 @@ Use the Performance diagnostics button in the viewport to inspect measured FPS, 
 ## Camera and pointer interaction
 
 The viewport uses one active pointer state: `idle`, `paint`, `rotate`, or `pan`. Left mouse starts painting only after a valid visible surface hit. Right mouse is the default held rotation gesture; middle mouse is the default held pan gesture. Pointer release/cancel, lost pointer capture, window blur, and document visibility changes clear the interaction state.
+
+## 2.5.2 updates
+
+- The Smudge tool was removed entirely (tool entry, icon, 'smear' stamp mask, stroke mode, smudge displacement engine).
+- Eraser, second rework: eraseAlongPath no longer removes meshes during the data pass. Updated stroke objects inherit the stale meshes; the rAF rebuild disposes and rebuilds them synchronously, eliminating the 'stroke missing' frame that caused flicker. Segment distance is computed directly per dab (the erase path per sample is one or two segments, so spatial bucketing is unnecessary and its cell granularity could miss large-radius dabs).
+- Lighting state gains fill, rim and ambient factors (unitless), set independently by sliders and by every preset; the light-source gizmo (marker + halo + direction line, depth test off) visualizes the key light position and persists across sessions.
+- The application icon is generated from the in-app makeup-mask mark by scripts/generate-app-icon.cjs (Electron draws canvas paths at 16-256 px and assembles a PNG-compressed ICO).

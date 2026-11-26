@@ -1,4 +1,13 @@
-# GrimStudio 2.5.1 — Continuous Eraser, Live Brush Cursor & Accent Themes
+# GrimStudio 2.5.2 — Eraser Rework, Light Source Gizmo & New App Icon
+
+- The Smudge tool was removed completely (tool, icon, stamp mask, stroke mode and its plumbing); the blend category now contains Blur, Blender and Eraser.
+- Eraser rework, second pass: fixed the flicker — the data pass no longer removes meshes; updated stroke objects inherit the old meshes, and the scheduled rebuild disposes stale geometry and builds fresh meshes in one synchronous task, so no frame can render a "stroke missing" state. Fixed missed dabs: erase distance is now computed directly against the path segments (the old spatial bucket granularity could miss dabs with large radii), and the code is simpler for it.
+- New light-source indicator: a viewport button toggles a glowing marker (with halo and a direction line from the model center) drawn on top of the scene, so the exact key-light position is visible even behind the head. The state persists in settings.
+- Finer light tuning: separate Fill, Rim and Ambient intensity sliders (0–200%, ambient 0–150%) in addition to the key light; all ten real-life presets now define their own fill/rim/ambient balance. Older saved settings and projects fall back to the previous brightness.
+- New application icon: a minimalist brass makeup mask on a dark rounded square, generated as a multi-size ICO (16–256 px) plus a 256 px PNG by `scripts/generate-app-icon.cjs`; the unused clown icon was removed.
+- Git: the project history now starts at this release; tag `v2.5.1` preserves the pre-change baseline for rollback.
+
+## GrimStudio 2.5.1 — Continuous Eraser, Live Brush Cursor & Accent Themes
 
 - The eraser now truly supports press-and-drag: every pointer sample erases along the segment between the previous and current surface position, so holding the button and sweeping erases continuously with no gating, and a single press erases immediately. Affected strokes rebuild once per animation frame (untouched strokes are skipped via an allocation-free early-out), and layer thumbnails refresh once at the end of the drag instead of on every pass.
 - Smudge rework: the movement delta is projected onto the surface tangent plane and direction-smoothed across samples, eliminating jitter tears; displacement strength is capped relative to the brush reach; touched strokes rebuild every frame for smooth live feedback.

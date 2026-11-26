@@ -93,7 +93,7 @@ function runSelfTest(win) {
           check('paint-stroke', painted>0, String(painted)+' dabs');
           // 3. Eyedropper picks a blended color from the overlap area.
           const before=document.querySelector('#colorHex').textContent;
-          toolButton(23)?.click(); await wait(200);
+          toolButton(22)?.click(); await wait(200);
           stage.dispatchEvent(new PointerEvent('pointerdown',{clientX:cx+40,clientY:cy,button:0,pointerId:11,bubbles:true,cancelable:true}));
           await wait(300);
           stage.dispatchEvent(new PointerEvent('pointerup',{clientX:cx+40,clientY:cy,pointerId:11,bubbles:true}));
@@ -120,7 +120,7 @@ function runSelfTest(win) {
           const toolButton=(index)=>document.querySelector('#toolGrid button[data-tool-index="'+index+'"]');
           // 4. Blend tools run over the painted area.
           const blendResults={};
-          for (const [name,index] of [['Blur',16],['Smudge',17],['Blender',18]]) {
+          for (const [name,index] of [['Blur',16],['Blender',17]]) {
             const btn=toolButton(index);
             if(!btn){check('tool-'+name,false,'button missing');continue;}
             btn.click(); await wait(150);
@@ -135,7 +135,7 @@ function runSelfTest(win) {
           }
           check('blender-paints', blendResults.Blender>blendResults.BlenderBefore, blendResults.BlenderBefore+' -> '+blendResults.Blender);
           // 5. Eraser removes paint.
-          toolButton(19)?.click(); await wait(200);
+          toolButton(18)?.click(); await wait(200);
           const eraserStartDabs=dabs();
           stage.dispatchEvent(new PointerEvent('pointerdown',{clientX:cx,clientY:cy,button:0,pointerId:9,bubbles:true,cancelable:true}));
           for(let i=1;i<=24;i++){ fire('pointermove',cx+i*4,cy+Math.sin(i/4)*8,9); await wait(40); }
@@ -151,6 +151,15 @@ function runSelfTest(win) {
           const preset=document.querySelector('#lightingPreset');
           preset.value='golden'; preset.dispatchEvent(new Event('change',{bubbles:true}));
           check('lighting-preset', document.querySelector('#lightTempReadout').textContent.includes('3400'), document.querySelector('#lightTempReadout').textContent);
+          const fill=document.querySelector('#lightFill');
+          fill.value='120'; fill.dispatchEvent(new Event('input',{bubbles:true}));
+          check('lighting-fill', document.querySelector('#lightFillReadout').textContent.includes('120'), document.querySelector('#lightFillReadout').textContent);
+          const gizmo=document.querySelector('#toggleLightGizmo');
+          let gizmoClickError='';
+          const gizmoErrorHandler=(event)=>{gizmoClickError=String(event.message||event.error||'error');};
+          window.addEventListener('error',gizmoErrorHandler,{once:true});
+          gizmo?.click(); await wait(300);
+          check('light-gizmo', gizmo?.getAttribute('aria-pressed')==='true', 'pressed='+(gizmo?.getAttribute('aria-pressed')||'null')+(gizmoClickError?' clickError='+gizmoClickError:''));
           // 7. Brush preview rendered.
           const preview=document.querySelector('#brushPreview');
           const px=preview.getContext('2d').getImageData(0,0,preview.width,preview.height).data;

@@ -1,11 +1,11 @@
 @echo off
 setlocal
 cd /d "%~dp0"
-title GrimStudio 2.5.1 Windows Build
+title GrimStudio 2.5.2 Windows Build
 color 0B
 
 echo ===================================================
-echo             GrimStudio 2.5.1 Build
+echo             GrimStudio 2.5.2 Build
 echo ===================================================
 echo.
 echo Node.js 20+ is required only for building this project.

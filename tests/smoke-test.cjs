@@ -18,7 +18,7 @@ const html = read('src/index.html');
 const css = read('src/style.css');
 const main = read('src/main.cjs');
 const packageJson = JSON.parse(read('package.json'));
-assert.equal(packageJson.version, '2.5.1', 'Project version must be 2.5.1');
+assert.equal(packageJson.version, '2.5.2', 'Project version must be 2.5.2');
 assert.match(html, /app\.bundle\.js/, 'HTML must load the bundled renderer');
 assert.match(packageJson.scripts['build:renderer'], /esbuild.*--bundle.*--format=iife/, 'Renderer must be bundled for Electron file:// runtime');
 assert.ok(packageJson.build.files.some(entry => entry.includes('assets/**/*')), 'Builder must include assets');
@@ -110,4 +110,4 @@ assert.match(css,/\.performance-diagnostics/,'Performance diagnostics overlay st
 assert.match(html,/id="performanceDiagnostics"/,'Diagnostics overlay must be available in the viewport');
 assert.match(packageJson.scripts.test,/spatial-raycast-test/,'Spatial raycast unit tests must run in npm test');
 
-console.log(`GrimStudio 2.5.1 static smoke tests passed. Model ${(glb.length/1024/1024).toFixed(2)} MiB; SHA-256 ${modelHash}`);
+console.log(`GrimStudio 2.5.2 static smoke tests passed. Model ${(glb.length/1024/1024).toFixed(2)} MiB; SHA-256 ${modelHash}`);

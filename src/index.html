@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="dark light">
-  <title>GrimStudio 2.5.1</title>
+  <title>GrimStudio 2.5.2</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -15,7 +15,7 @@
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 3.5h13v7.2c0 5.4-3.7 8.9-6.5 10-2.8-1.1-6.5-4.6-6.5-10z"/><path d="M9.2 9.6h1.7M13.1 9.6h1.7"/><path d="M10 14c1.3.9 2.7.9 4 0"/></svg>
       </span>
       <div class="brand-text"><b>GrimStudio</b><small data-i18n="brandTag">PROFESSIONAL 3D MAKEUP STUDIO</small></div>
-      <span class="brand-version">2.5.1</span>
+      <span class="brand-version">2.5.2</span>
     </div>
     <div class="project-label"><input id="projectName" value="Untitled Makeup" aria-label="Project name" spellcheck="false"></div>
     <div class="top-actions">
@@ -78,6 +78,9 @@
         <div class="range-row"><label><span data-i18n="lightAzimuth">Light azimuth</span><span id="lightAzimuthReadout">25°</span></label><input id="lightAzimuth" type="range" min="0" max="360" step="1" value="25"></div>
         <div class="range-row"><label><span data-i18n="lightElevation">Light elevation</span><span id="lightElevationReadout">45°</span></label><input id="lightElevation" type="range" min="3" max="85" step="1" value="45"></div>
         <div class="range-row"><label><span data-i18n="lightIntensity">Key light intensity</span><span id="lightIntensityReadout">100%</span></label><input id="lightIntensity" type="range" min="10" max="200" value="100"></div>
+        <div class="range-row"><label><span data-i18n="lightFill">Fill light</span><span id="lightFillReadout">45%</span></label><input id="lightFill" type="range" min="0" max="200" step="5" value="45"></div>
+        <div class="range-row"><label><span data-i18n="lightRim">Rim light</span><span id="lightRimReadout">55%</span></label><input id="lightRim" type="range" min="0" max="200" step="5" value="55"></div>
+        <div class="range-row"><label><span data-i18n="lightAmbient">Ambient light</span><span id="lightAmbientReadout">50%</span></label><input id="lightAmbient" type="range" min="0" max="150" step="5" value="50"></div>
         <p class="view-hint" data-i18n="lightHint">Direction is measured from the front of the model.</p>
       </section>
     </aside>
@@ -87,6 +90,7 @@
         <div class="view-icons">
           <button id="settingsToggle" type="button" title="Settings" aria-pressed="false" aria-label="Settings"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 7h9M17 7h3M4 12h3M11 12h9M4 17h13"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="19" cy="17" r="2"/></svg></button>
           <button id="performanceDiagnosticsToggle" type="button" title="Performance diagnostics" aria-pressed="false" aria-label="Performance diagnostics"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l2-5 4 10 2-5h6"/></svg></button>
+          <button id="toggleLightGizmo" type="button" title="Toggle light source visibility · Показать источник света" aria-pressed="false" aria-label="Toggle light source visibility"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.2 5.2l2.1 2.1M16.7 16.7l2.1 2.1M18.8 5.2l-2.1 2.1M7.3 16.7l-2.1 2.1"/></svg></button>
           <button id="toggleGrid" type="button" title="Toggle grid" aria-label="Toggle grid"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M4 4h16v16H4z"/><path d="M9.33 4v16M14.66 4v16M4 9.33h16M4 14.66h16"/></svg></button>
           <button id="fullscreenBtn" type="button" title="Fullscreen viewport" aria-label="Fullscreen viewport"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/></svg></button>
         </div>
@@ -158,7 +162,7 @@
         <p class="settings-note" data-i18n="workflowText">Makeup is stored as surface-attached decals in independent layers. The source head materials and textures are never edited.</p>
       </section>
       <section class="settings-section">
-        <div class="settings-note about-line">GrimStudio&nbsp;2.5.1</div>
+        <div class="settings-note about-line">GrimStudio&nbsp;2.5.2</div>
       </section>
     </div>
   </div>
