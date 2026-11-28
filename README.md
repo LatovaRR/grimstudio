@@ -91,21 +91,33 @@ GrimStudio is a desktop 3D makeup and face-paint studio. Paint directly on a rea
 
 ### Screenshots
 
-**Clean workspace** — the model is ready to paint:
+**GrimStudio in action** — full clown makeup in the light theme:
 
-<img src="docs/screenshot-clean.png" width="900" alt="Clean workspace" />
+<img src="docs/screenshot-hero.png" width="900" alt="GrimStudio light theme with clown makeup" />
 
-**Painting on the model** — eyeshadow, blush and lipstick applied right on the 3D surface:
+**Close-up** — stencil star over the eye, makeup follows the surface:
 
-<img src="docs/screenshot-painted.png" width="900" alt="Painting on the model" />
+<img src="docs/screenshot-star.png" width="900" alt="Clown makeup close-up with stencil star" />
 
-**The head can be rotated** — paint stays attached to the surface:
+**The toolbox** — 23 purpose-built makeup tools:
 
-<img src="docs/screenshot-turned.png" width="900" alt="Rotated head" />
+<img src="docs/screenshot-tools.png" width="380" alt="Toolbox" />
 
-**Settings** — camera, performance, appearance and accent color:
+**Brush preview** — see the exact dab before it lands:
 
-<img src="docs/screenshot-settings.png" width="900" alt="Settings" />
+<img src="docs/screenshot-brush.png" width="380" alt="Brush preview" />
+
+**Colors and layers** — real cosmetic palette, independent makeup layers:
+
+<img src="docs/screenshot-palette.png" width="380" alt="Colors and layers" />
+
+**Head models and skin tones:**
+
+<img src="docs/screenshot-model.png" width="380" alt="Head models and skin tones" />
+
+**Lighting studio** — ten real-life presets:
+
+<img src="docs/screenshot-lightpres.png" width="380" alt="Lighting presets" />
 
 ### Features
 
@@ -142,21 +154,33 @@ GrimStudio — настольная 3D-студия грима и макияжа
 
 ### Скриншоты
 
-**Чистое рабочее пространство** — модель готова к рисованию:
+**GrimStudio в работе** — полный клоунский грим в светлой теме:
 
-<img src="docs/screenshot-clean.png" width="900" alt="Чистое рабочее пространство" />
+<img src="docs/screenshot-hero.png" width="900" alt="Светлая тема с клоунским гримом" />
 
-**Рисование по модели** — тени, румяна и помада нанесены прямо на 3D-поверхность:
+**Крупный план** — трафарет-звезда у глаза, грим повторяет поверхность:
 
-<img src="docs/screenshot-painted.png" width="900" alt="Рисование по модели" />
+<img src="docs/screenshot-star.png" width="900" alt="Клоунский грим крупным планом" />
 
-**Голову можно поворачивать** — грим остаётся прикреплённым к поверхности:
+**Панель инструментов** — 23 инструмента под конкретные задачи:
 
-<img src="docs/screenshot-turned.png" width="900" alt="Повёрнутая голова" />
+<img src="docs/screenshot-tools.png" width="380" alt="Панель инструментов" />
 
-**Настройки** — камера, производительность, оформление и акцентный цвет:
+**Предпросмотр кисти** — видно точный мазок до того, как он ляжет:
 
-<img src="docs/screenshot-settings.png" width="900" alt="Настройки" />
+<img src="docs/screenshot-brush.png" width="380" alt="Предпросмотр кисти" />
+
+**Цвета и слои** — палитра реальных косметических оттенков, независимые слои:
+
+<img src="docs/screenshot-palette.png" width="380" alt="Цвета и слои" />
+
+**Модели голов и тон кожи:**
+
+<img src="docs/screenshot-model.png" width="380" alt="Модели голов и тон кожи" />
+
+**Студия освещения** — десять пресетов из реальной жизни:
+
+<img src="docs/screenshot-lightpres.png" width="380" alt="Пресеты освещения" />
 
 ### Возможности
 
