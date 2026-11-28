@@ -1,1 +1,0 @@
-1a525e9bf4aeccdd6b13ac3080217901ba1ab05d3a268392b8cf5d844b79577c  assets/models/human-head.glb
